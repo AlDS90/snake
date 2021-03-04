@@ -1,4 +1,5 @@
 import tkinter as tk
+import random as rnd
 from PIL import Image, ImageTk
 
 
@@ -7,10 +8,10 @@ H: int = 1000
 B_SIZE: int = 50
 DELAY: int = 200
 LEN: int = 3
-c_body_w = W / B_SIZE
-c_body_h = H / B_SIZE
-x = [0] * int(c_body_w)
-y = [0] * int(c_body_h)
+c_body_w = int(W / B_SIZE)
+c_body_h = int(H / B_SIZE)
+x = [0] * c_body_w
+y = [0] * c_body_h
 
 
 class Snake(tk.Canvas):
@@ -46,6 +47,7 @@ class Snake(tk.Canvas):
         self.spawn_actors()
 
     def spawn_actors(self):
+        self.spawn_apple()
         x[0] = int(c_body_w / 2) * B_SIZE
         y[0] = int(c_body_h / 2) * B_SIZE
         for i in range(1, LEN):
@@ -54,6 +56,14 @@ class Snake(tk.Canvas):
         self.create_image(x[0], y[0], image=self.head, anchor='nw', tag='head')
         for i in range(1, LEN):
             self.create_image(x[i], y[i], image=self.body, anchor='nw', tag='body')
+
+    def spawn_apple(self):
+        apple = self.find_withtag('apple')
+        if apple:
+            self.delete(apple[0])
+        r_x = rnd.randint(0, c_body_w - 1)
+        r_y = rnd.randint(0, c_body_h - 1)
+        self.create_image(r_x * B_SIZE, r_y * B_SIZE, anchor='nw', image=self.apple, tag='apple')
 
 
 root = tk.Tk()
